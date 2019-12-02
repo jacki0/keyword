@@ -9,7 +9,7 @@ def modifier(words, type):
 
     """
     marks = ''
-    if 'all' in type:                                 # Удаление всех знаков пунктуации
+    if 'punct' in type:                               # Удаление всех знаков пунктуации
         marks += string.punctuation + '\r'
     if 'quotes' in type:                              # Удаление всех видов кавычек
         marks += '[“”‘«»„“]'
@@ -41,10 +41,9 @@ def modifier(words, type):
         for word in words.strip().split('\n'):
             if morph.parse(word)[0].tag.POS: == 'INTJ'
                 words.replace(word, '')
-    
 
     if marks != '':
-        words = re.sub('[{}]'.format(re.escape(marks)), '', words) #удаляем знаки пунктуации
+        words = re.sub('[{}]'.format(re.escape(marks)), '', words) # Удаление символов
     else:
         return 'Введите тип удаляемых символов'
     words = list(words.lower().split('\n'))
@@ -56,3 +55,24 @@ def modifier(words, type):
     if 'dub' in type:                                 # Удаление дублирующихся слов
         list(set(words))
     return words
+
+
+def declension(userinput):
+    """Функция получает одно или несколько слов ивозвращает список склонений заданных слов.
+
+    """
+    result = []
+    decls = []
+    userinput = modifier(userinput, 'punct') 
+    for word in userinput:
+        words = morph.parse(word)[0].lexeme        # Получение списка склонений
+        for element in words:                      # Отчистка от лишних данных
+            decl = str(element).split(' ')
+            decls.append(decl[-3].replace("'", '').replace(',', ''))  
+        if word not in decls:                      # Проверка наличие изначальной формы в результирующем списке
+            decls.append(word)
+        if len(userinput) == 1:                    # Если задано одно слово - возвращаем результат
+            return decls
+        else:
+            result.append(decls)
+    return result
