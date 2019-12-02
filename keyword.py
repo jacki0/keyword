@@ -9,6 +9,7 @@ def modifier(words, type):
 
     """
     marks = ''
+    result = []
     if 'punct' in type:                               # Удаление всех знаков пунктуации
         marks += string.punctuation + '\r'
     if 'quotes' in type:                              # Удаление всех видов кавычек
@@ -54,6 +55,10 @@ def modifier(words, type):
             words.remove('')
     if 'dub' in type:                                 # Удаление дублирующихся слов
         list(set(words))
+    if 'decl' in type:                                # Удаление дублирующихся слов и склонений
+        while len(words) > 0:
+            result.append(words[0])
+            words = list(set(words) - set(declension(words[0]).split('\n')))
     return words
 
 
@@ -76,3 +81,19 @@ def declension(userinput):
         else:
             result.append(decls)
     return result
+
+
+def counter(words, deldub = False, deldecl = False):
+    """Функция считает количество слов.
+    Возвращает список, в котором первый элемент - количество слов, второй - все слова через пробел.
+    Если передать переменной deldub значение True, будут удалены повторяющиеся слова,
+    если передать переменной decl значение True, так-же будут удалены повторяющиеся склонения слов.
+    
+    """
+    if deldub == False:
+        words = modifier(words, 'all')
+    elif deldub == True and deldecl == False:
+        words = modifier(words, 'alldub')
+    elif deldecl == True:
+        words = modifier(words, 'alldecl')
+    return words.insert(0, 'Количество слов - ' + str(len(result)))
