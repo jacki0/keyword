@@ -1,3 +1,5 @@
+import re
+from itertools import product
 import pymorphy2
 morph = pymorphy2.MorphAnalyzer()
 
@@ -97,3 +99,16 @@ def counter(words, deldub = False, deldecl = False):
     elif deldecl == True:
         words = modifier(words, 'alldecl')
     return words.insert(0, 'Количество слов - ' + str(len(result)))
+
+
+def generator(words):
+    """Функция получает на вход несколько списков слов в фотмате списка списков, и выводит список сочетаний эллементов входных списков.
+
+    """
+    result = []
+    while [] in words:
+        words.remove([])
+    genwords = list(product(*words))          # Создаём сочетаний
+    for i in genwords:
+        result.append(' '.join(i))            # Преобразуем множество в строку
+    return result
