@@ -133,3 +133,28 @@ def cityremover(text, stopcity = cities):
     words = [word for word in words if word not in stopcity]
     words = ' '.join(words)
     return words
+
+
+def trimutm(url):
+    """Функция получает ссылку или несколько ссыло разделённых переносом строки(\n) и удаляет из неё utm метки.
+
+    """
+    url = url.split('\n')
+    while '' in url:
+        url.remove('')
+    while '\r' in url:
+        url.remove('\r')
+    result = []
+    for url in url:
+        if "utm_" not in url:          # Проверка на содержание гtm метки
+           result.append(url)
+           continue
+        matches = re.findall('(.+\?)([^#]*)(.*)', url)
+        if len(matches) == 0:
+           result.append(url)
+           continue
+        match = matches[0]
+        query = match[1]
+        sanitized_query = '&'.join([p for p in query.split('&') if not p.startswith('utm_')])   # Отчистка от метки
+        result.append(match[0]+sanitized_query+match[2])
+    return result
