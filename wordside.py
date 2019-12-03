@@ -1,4 +1,7 @@
 import re
+import os
+import string
+import functools
 from itertools import product
 import pymorphy2
 morph = pymorphy2.MorphAnalyzer()
@@ -28,23 +31,23 @@ def modifier(words, type):
         marks += '-'
     if 'prep' in type:                                # Удаление предлогов
         for word in words.strip().split('\n'):
-            if morph.parse(word)[0].tag.POS: == 'PREP'
+            if morph.parse(word)[0].tag.POS == 'PREP':
                 words.replace(word, '')
     if 'npro' in type:                                # Удаление местоимений-существительных
         for word in words.strip().split('\n'):
-            if morph.parse(word)[0].tag.POS: == 'NPRO'
+            if morph.parse(word)[0].tag.POS == 'NPRO':
                 words.replace(word, '')
     if 'conj' in type:                                # Удаление союзов
         for word in words.strip().split('\n'):
-            if morph.parse(word)[0].tag.POS: == 'CONJ'
+            if morph.parse(word)[0].tag.POS == 'CONJ':
                 words.replace(word, '')
     if 'prcl' in type:                                # Удаление частиц
         for word in words.strip().split('\n'):
-            if morph.parse(word)[0].tag.POS: == 'PRCL'
+            if morph.parse(word)[0].tag.POS == 'PRCL':
                 words.replace(word, '')
     if 'intj' in type:                                # Удаление междометий
         for word in words.strip().split('\n'):
-            if morph.parse(word)[0].tag.POS: == 'INTJ'
+            if morph.parse(word)[0].tag.POS == 'INTJ':
                 words.replace(word, '')
 
     if marks != '':
