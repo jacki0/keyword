@@ -158,3 +158,28 @@ def trimutm(url):
         sanitized_query = '&'.join([p for p in query.split('&') if not p.startswith('utm_')])   # Отчистка от метки
         result.append(match[0]+sanitized_query+match[2])
     return result
+
+
+def crossminus(userinput):
+    """ Функция получает на вход строку состоящую из списка фраз разделённых переносом строки и производит добавление слов с префиксом '-' не входящих в данную фразу,
+        но входящих в стальные фразы.
+        Основное предназначение - создание ключевых фраз для рекламных кампаний
+    """
+    words = []
+    allwords = []
+    result = []
+    for keys in userinput.split('\n'):                # Преобразование входной строки в список списков слов
+        keys = modifier(keys, 'punct')
+        words.append(keys)
+    dub = set(functools.reduce(set.__and__, (set(i) for i in words)))  # Определение слов повторяющихся во всех фразах
+    for key in words:
+        allwords += key
+    allwords = set(allwords)
+    allwords ^= dub
+    for key in words:
+        for word in allwords:
+            if word not in key:
+                key.append('-' + word)
+    for i in range(len(words)):
+        result.append(' '.join(words[i]))
+    return result
