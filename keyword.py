@@ -3,6 +3,8 @@ from itertools import product
 import pymorphy2
 morph = pymorphy2.MorphAnalyzer()
 
+THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
+cities = os.path.join(THIS_FOLDER, 'opencity.txt')    # opencity - файл содержащий список городов
 
 def modifier(words, type):
     """Функция получает набор данных от пользователя, чистит данные от лишних символов и выводит список строк по слову в строке.
@@ -93,11 +95,11 @@ def counter(words, deldub = False, deldecl = False):
     
     """
     if deldub == False:
-        words = modifier(words, 'all')
+        words = modifier(words, 'punct')
     elif deldub == True and deldecl == False:
-        words = modifier(words, 'alldub')
+        words = modifier(words, 'punctdub')
     elif deldecl == True:
-        words = modifier(words, 'alldecl')
+        words = modifier(words, 'punctdecl')
     return words.insert(0, 'Количество слов - ' + str(len(result)))
 
 
@@ -118,7 +120,16 @@ def lemma(words):
     """Функция получает строку, разбивает её на список по словам и выводит список нормальных форм слов.
 
     """
-    words = modifier(words, 'all')
+    words = modifier(words, 'punct')
     for i in words:
         words[words.index(i)] = morph.parse(i)[0].normal_form   
+    return words
+
+
+def cityremover(text, stopcity = cities):
+    """Функция получает текст, отчищает его от знаков пунктуации и удаляет из него города
+    """
+    words = modifier(text, 'punct')
+    words = [word for word in words if word not in stopcity]
+    words = ' '.join(words)
     return words
