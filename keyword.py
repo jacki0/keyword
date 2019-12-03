@@ -108,7 +108,17 @@ def generator(words):
     result = []
     while [] in words:
         words.remove([])
-    genwords = list(product(*words))          # Создаём сочетаний
+    genwords = list(product(*words))          # Создание списка сочетаний
     for i in genwords:
-        result.append(' '.join(i))            # Преобразуем множество в строку
+        result.append(' '.join(i))            # Преобразование множества в строку
     return result
+
+
+def lemma(words):
+    """Функция получает строку, разбивает её на список по словам и выводит список нормальных форм слов.
+
+    """
+    words = modifier(words, 'all')
+    for i in words:
+        words[words.index(i)] = morph.parse(i)[0].normal_form   
+    return words
