@@ -30,23 +30,23 @@ def modifier(words, type):
     if 'minus' in type:                               #Удаление знаков минус
         marks += '-'
     if 'prep' in type:                                # Удаление предлогов
-        for word in words.strip().split('\n'):
+        for word in words.strip().split(' '):
             if morph.parse(word)[0].tag.POS == 'PREP':
                 words.replace(word, '')
     if 'npro' in type:                                # Удаление местоимений-существительных
-        for word in words.strip().split('\n'):
+        for word in words.strip().split(' '):
             if morph.parse(word)[0].tag.POS == 'NPRO':
                 words.replace(word, '')
     if 'conj' in type:                                # Удаление союзов
-        for word in words.strip().split('\n'):
+        for word in words.strip().split(' '):
             if morph.parse(word)[0].tag.POS == 'CONJ':
                 words.replace(word, '')
     if 'prcl' in type:                                # Удаление частиц
-        for word in words.strip().split('\n'):
+        for word in words.strip().split(' '):
             if morph.parse(word)[0].tag.POS == 'PRCL':
                 words.replace(word, '')
     if 'intj' in type:                                # Удаление междометий
-        for word in words.strip().split('\n'):
+        for word in words.strip().split(' '):
             if morph.parse(word)[0].tag.POS == 'INTJ':
                 words.replace(word, '')
 
@@ -54,7 +54,7 @@ def modifier(words, type):
         words = re.sub('[{}]'.format(re.escape(marks)), '', words) # Удаление символов
     else:
         return 'Введите тип удаляемых символов'
-    words = list(words.lower().split('\n'))
+    words = list(words.lower().split(' '))
     if words[-1] == '':
         words.remove(words[-1])
     if 'pass' in type:                                # Удаление пустых строк
@@ -80,13 +80,15 @@ def declension(userinput):
         words = morph.parse(word)[0].lexeme        # Получение списка склонений
         for element in words:                      # Отчистка от лишних данных
             decl = str(element).split(' ')
-            decls.append(decl[-3].replace("'", '').replace(',', ''))  
+            if len(decl[-3].replace("'", '').replace(',', '')) > 2:
+                decls.append(decl[-3].replace("'", '').replace(',', ''))
         if word not in decls:                      # Проверка наличие изначальной формы в результирующем списке
             decls.append(word)
-        if len(userinput) == 1:                    # Если задано одно слово - возвращаем результат
-            return decls
-        else:
-            result.append(decls)
+        """for i in range(len(decls)):
+            if len(decls[i]) > 2:
+                decls.append(decls.pop(i))"""
+        result.append(decls)
+        decls = []
     return result
 
 
