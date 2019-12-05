@@ -60,17 +60,18 @@ def modifier(words, type):
     if 'pass' in type:                                # Удаление пустых строк
         while '' in words:
             words.remove('')
-    if 'dub' in type:                                 # Удаление дублирующихся слов
-        list(set(words))
+    if 'dub' in type:                                # Удаление дублирующихся слов
+        words = list(set(words))
     if 'decl' in type:                                # Удаление дублирующихся слов и склонений
         while len(words) > 0:
             result.append(words[0])
-            words = list(set(words) - set(declension(words[0]).split('\n')))
+            words = list(set(words) - set(declension(words[0])))
+        return result
     return words
 
 
 def declension(userinput):
-    """Функция получает одно или несколько слов ивозвращает список склонений заданных слов.
+    """Функция получает одно или несколько слов ивозвращает список списков склонений заданных слов.
 
     """
     result = []
@@ -84,9 +85,8 @@ def declension(userinput):
                 decls.append(decl[-3].replace("'", '').replace(',', ''))
         if word not in decls:                      # Проверка наличие изначальной формы в результирующем списке
             decls.append(word)
-        """for i in range(len(decls)):
-            if len(decls[i]) > 2:
-                decls.append(decls.pop(i))"""
+        if len(userinput) == 1:
+            return decls
         result.append(decls)
         decls = []
     return result
@@ -105,7 +105,8 @@ def counter(words, deldub = False, deldecl = False):
         words = modifier(words, 'punctdub')
     elif deldecl == True:
         words = modifier(words, 'punctdecl')
-    return words.insert(0, 'Количество слов - ' + str(len(result)))
+    words.insert(0, ('Количество слов - ' + str(len(words))))
+    return words
 
 
 def generator(words):
