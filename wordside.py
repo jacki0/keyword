@@ -8,12 +8,14 @@ morph = pymorphy2.MorphAnalyzer()
 
 THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
 cities = os.path.join(THIS_FOLDER, 'opencity.txt')    # opencity - файл содержащий список городов
-
+"""wordside - библиотека для работы с текстом
+   Существующие проблемы:
+"""
 def modifier(words, type):
     """Функция получает набор данных от пользователя, чистит данные от лишних символов и выводит список строк по слову в строке.
     Параметр type содержит информацию о том, какие символы удалять.
     Тип удаляемых символов передаётся в переменную type без пробелов в виде 'quotesplusprepconj'
-
+    !!!Нужно обратить внимание, что при удалении всех знаков пунктуации или минусов удаляются дефисы в словах.!!!
     """
     marks = ''
     result = []
@@ -110,9 +112,11 @@ def counter(words, deldub = False, deldecl = False):
 
 
 def generator(words):
-    """Функция получает на вход несколько списков слов в фотмате списка списков, и выводит список сочетаний эллементов входных списков.
+    """Функция получает на вход список строк, и выводит список сочетаний слов из входных строк.
 
     """
+    for text in words:
+        words[words.index(text)] = modifier(text, 'punct')
     result = []
     while [] in words:
         words.remove([])
