@@ -7,7 +7,10 @@ import pymorphy2
 morph = pymorphy2.MorphAnalyzer()
 
 THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
-cities = os.path.join(THIS_FOLDER, 'opencity.txt')    # opencity - файл содержащий список городов
+cities = os.path.join(THIS_FOLDER, 'stopcity.txt')    # stopcity - файл содержащий список городов
+with open(cities) as file:
+    cities = file.read()
+
 """wordside - библиотека для работы с текстом
    Существующие проблемы:
 """
@@ -136,11 +139,15 @@ def lemma(words):
     return words
 
 
-def cityremover(text, stopcity = cities):
-    """Функция получает текст, отчищает его от знаков пунктуации и удаляет из него города
+def cityremover(text, punct = False, stopcity = cities):
+    """Функция получает текст и удаляет из него города
+       Если параметр punct в значении True - функция отчищает текст от знаков пунктуации 
     """
-    words = modifier(text, 'punct')
-    words = [word for word in words if word not in stopcity]
+    if punct == True:
+        text = modifier(text, 'punct')
+    else:
+        text = text.split(' ')
+    words = [word for word in text if modifier(word, 'punct')[0] not in stopcity]
     words = ' '.join(words)
     return words
 
