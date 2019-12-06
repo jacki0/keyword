@@ -152,18 +152,19 @@ def cityremover(text, punct = False, stopcity = cities):
     return words
 
 
-def trimutm(url):
+def trimutm(urls):
     """Функция получает ссылку или несколько ссыло разделённых переносом строки(\n) и удаляет из неё utm метки.
+    Если вводится одна ссылка - выводится строка, если несколько - список строк.
 
     """
-    url = url.split('\n')
-    while '' in url:
-        url.remove('')
-    while '\r' in url:
-        url.remove('\r')
+    urls = urls.split('\n')
+    while '' in urls:
+        urls.remove('')
+    while '\r' in urls:
+        urls.remove('\r')
     result = []
-    for url in url:
-        if "utm_" not in url:          # Проверка на содержание гtm метки
+    for url in urls:
+        if "utm_" not in url:          # Проверка на содержание utm метки
            result.append(url)
            continue
         matches = re.findall('(.+\?)([^#]*)(.*)', url)
@@ -174,7 +175,10 @@ def trimutm(url):
         query = match[1]
         sanitized_query = '&'.join([p for p in query.split('&') if not p.startswith('utm_')])   # Отчистка от метки
         result.append(match[0]+sanitized_query+match[2])
-    return result
+    if len(urls) == 1:
+        return result[0]
+    else:
+        return result
 
 
 def crossminus(userinput):
